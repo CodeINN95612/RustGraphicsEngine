@@ -7,7 +7,7 @@ use winit::{
 };
 
 use crate::{
-    error::app_run_error::AppRunError,
+    error::{app_error::AppError, error::Error},
     events::{engine_event::EngineEvent, event_processor::EventProcessor},
     utils::logger::Logger,
 };
@@ -49,7 +49,7 @@ impl App {
         })
     }
 
-    pub fn run(self) -> Result<(), AppRunError> {
+    pub fn run(self) -> Result<(), Error> {
         let layers = Rc::clone(&self.layers);
         layers.borrow_mut().iter_mut().for_each(|layer| {
             layer.on_init();
@@ -85,7 +85,7 @@ impl App {
             Ok(_) => Ok(()),
             Err(_) => {
                 error!("Unable to execute event loop");
-                return Err(AppRunError);
+                return Err(Error::App(AppError::RunError));
             }
         }
     }
